@@ -1,0 +1,45 @@
+<h1>Contribution Analyzer</h1>
+
+<% oldest = Event.first.timestamp.to_datetime %>
+<% newest = Event.last.timestamp.to_datetime %>
+<% months = (oldest..newest).map(&:beginning_of_month).uniq.reverse %>
+
+<% months.each do |month| %>
+  <%= link_to month.strftime('%Y.%m'), '#' + month.strftime('%Y%m') %>
+<% end %>
+
+<% months.each do |month| %>
+  <% events = Event.where(timestamp: month.beginning_of_month..month.end_of_month) %>
+  <% actors = events.map(&:actor).uniq.sort %>
+  <% types = events.map(&:type).uniq.sort %>
+
+  <h2 id="<%= month.strftime('%Y%m') %>"><%= month.strftime('%Y.%m') %> (<%= events.count %>)</h2>
+  
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <% actors.each do |actor| %>
+          <th><%= actor %></th>
+        <% end %>
+      </tr>
+    <thead>
+
+    <tbody>
+      <% types.each do |type| %>
+        <tr>
+          <th><%= type %></th>
+          <% actors.each do |actor| %>
+            <td><%= events.where(type: type, actor: actor).count %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      <tr>
+        <th>Total</th>
+        <% actors.each do |actor| %>
+          <td><strong><%= events.where(actor: actor).count %></strong></td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
