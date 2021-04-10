@@ -45,6 +45,12 @@ Set the name of the GitHub's organization for which you want to analyze the cont
 % export CONTRIBUTION_ANALYZER_ORG_NAME="orgname"
 ```
 
+### Sync GitHub's Activity Event
+
+```zsh
+% rake github:sync_activity_events
+```
+
 ## GitHub API
 
 Use these [GitHub APIs](https://docs.github.com/en/rest)
